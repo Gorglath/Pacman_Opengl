@@ -27,6 +27,8 @@ void Game::restartGame()
     life--;
     if(life <= 0)
     {
+        m_already_Played_Opening_Sound = true;
+        m_current_Loop_Number = 0;
         //Clean everything and load from the beginning.
         clean();
         load(true);
@@ -93,11 +95,23 @@ void Game::load(bool reload)
 
     //Load the game sounds.
     m_soundManager.loadSounds();
-    m_soundManager.playSound("pacman_beginning",0,true);
 }
 
 void Game::update(float dt) 
 {
+    if(!m_already_Played_Opening_Sound)
+    {
+        if(m_current_Loop_Number == 2)
+        {
+            m_already_Played_Opening_Sound = true;
+            m_soundManager.playSound("pacman_beginning",0,true);
+            SDL_Delay(5000);
+        }
+        else
+        {
+            m_current_Loop_Number++;
+        }
+    }
     //Update dt.
     timeSinceStart += dt;
     const float t = timeSinceStart * 0.3f;

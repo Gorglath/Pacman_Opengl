@@ -40,12 +40,14 @@ class Game {
     void restartGame();
     GLuint vao;
     GLuint buffer;
+    int m_current_Loop_Number{0};
     float timeSinceStart;
     float m_time_To_Stay_Inverted {10.0f};
     float m_inverted_Timer{0.0f};
     float m_sound_Stop_Timer{0.0f};
     bool m_inverted{false};
     bool m_playing_Eat_Sound{false};
+    bool m_already_Played_Opening_Sound{false};
 
     Matrix4 transform;
     Matrix4 projection;
