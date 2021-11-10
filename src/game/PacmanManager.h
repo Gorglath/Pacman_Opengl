@@ -21,6 +21,8 @@ class PacmanManager
     void clean();
 
     void resetPacman();
+
+    void setPacmanInverted(bool inverted);
     
     inline Vector3 getPacmanDirection() const{return m_pacman_direction;}
     inline Vector3 getPacmanPosition() const {return m_pacman_Cube.getTranslation();}

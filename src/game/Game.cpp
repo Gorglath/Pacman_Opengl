@@ -144,6 +144,7 @@ void Game::update(float dt)
             m_inverted = true;
             m_inverted_Timer = 0;
             m_ghostmanager.setInvertState(true);
+            m_pacmanmanager.setPacmanInverted(true);
 
             //Reset the ate food bool.
             m_foodmanager.setDidAtePowerFood(false);
@@ -186,6 +187,7 @@ void Game::update(float dt)
         {
             m_inverted = false;
             m_ghostmanager.setInvertState(false);
+            m_pacmanmanager.setPacmanInverted(false);
         }
     }
 

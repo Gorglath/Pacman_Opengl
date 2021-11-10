@@ -181,3 +181,17 @@ void PacmanManager::clean()
     m_pacman_Cube.clean();
     m_current_Direction = Direction::STATIC;
 }
+
+void PacmanManager::setPacmanInverted(bool inverted)
+{
+    if(inverted)
+    {
+        m_speed_X = m_speed_X * 1.2f;
+        m_speed_Y = m_speed_Y * 1.2f;
+    }
+    else
+    {
+        m_speed_X = m_speed_X / 1.2f;
+        m_speed_Y = m_speed_Y / 1.2f;
+    }
+}
