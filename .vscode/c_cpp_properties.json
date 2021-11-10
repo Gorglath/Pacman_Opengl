@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceRoot}/external/SDL2-2.0.12/include",
+                "${workspaceRoot}/external/SDL2_image-2.0.5/include",
+                "${workspaceRoot}/external/glew-2.1.0/include",
+                "${workspaceRoot}/external/SDL2_mixer-2.0.4/include",
+                "${workspaceRoot}/external/SDL2_ttf-2.0.15/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:/Program Files/mingw-w64/x86_64-8.1.0-posix-seh-rt_v6-rev0/mingw64/bin/g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
