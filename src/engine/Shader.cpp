@@ -4,6 +4,11 @@ Shader::Shader() {}
 
 Shader::~Shader() {}
 
+void Shader::initShader(const char* nVertexShader, const char* nFragmentShader)
+{
+    vertexShader = nVertexShader;
+    fragmentShader = nFragmentShader;
+}
 void Shader::compileVertexShader()
 {
     vs = glCreateShader(GL_VERTEX_SHADER);

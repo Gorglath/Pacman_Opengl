@@ -74,6 +74,9 @@ void Cube::load() {
 void Cube::draw(Shader& shader) {
     if(cubeType != CubeType::NONE)
     {
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    
         shader.use();
         shader.setMatrix4("mv_matrix", transform);
         shader.setVector4f("colorIn", color.toFloatArray());

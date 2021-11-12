@@ -25,6 +25,10 @@ void Game::restartGame()
 
     //Substract one and check if the game is over.
     life--;
+
+    //Update lives text.
+    const char* livesText = std::to_string(life).c_str();
+    m_text_Manager.setLivesText(livesText);
     if(life <= 0)
     {
         m_already_Played_Opening_Sound = true;
@@ -53,24 +57,15 @@ void Game::load(bool reload)
     {
         // Setup OpenGL
         glEnable(GL_CULL_FACE);
-        glFrontFace(GL_CW);
+        glCullFace(GL_FRONT);
+        glFrontFace(GL_CCW);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
 
 
+        setShaders();
         // Setup shader
-        shader.compileVertexShader();
-        shader.compileFragmentShader();
-        shader.createShaderProgram();
-
-        // Setup 3D scene
-        projection = Matrix4::createPerspectiveFOV(70.0f, windowWidth, windowHeight, 0.1f, 1000.0f);
-        view = Matrix4::createTranslation(Vector3(-(21/2),-(27/2),1));
-
-        //Setup shader matrixes.
-        shader.use();
-        shader.setMatrix4("proj_matrix", projection);
-        shader.setMatrix4("view_matrix",view);
+        
     }
     
     //Initialize and sort the cubes.
@@ -95,10 +90,91 @@ void Game::load(bool reload)
 
     //Load the game sounds.
     m_soundManager.loadSounds();
-}
 
+    //Initialize game texts.
+    m_text_Manager.init();
+}
+void Game::setShaders()
+{   
+    // Setup 3D scene
+    projection = Matrix4::createPerspectiveFOV(70.0f, windowWidth, windowHeight, 0.1f, 1000.0f);
+    view = Matrix4::createTranslation(Vector3(-(21/2),-(27/2),1));
+
+
+    //Create cube shader.
+    const char* cubeVertexShader =
+        "#version 430\n"
+        "layout(location = 0) in vec4 position;"
+
+        "uniform mat4 mv_matrix;"
+        "uniform mat4 proj_matrix;"
+        "uniform mat4 view_matrix;"
+        "uniform vec4 colorIn;"
+
+        "out vec4 cube_color;"
+
+        "void main(void)"
+        "{"
+            "cube_color = colorIn;"
+            "gl_Position = proj_matrix * view_matrix * mv_matrix * position;"
+        "}";
+
+
+    const char* cubeFragmentShader =
+        "#version 430\n"
+
+        "in vec4 cube_color;"
+
+        "out vec4 color;"
+
+        "void main()"
+        "{"
+            "color = cube_color;"
+        "}";
+
+    m_cube_Shader.initShader(cubeVertexShader,cubeFragmentShader);
+    m_cube_Shader.compileVertexShader();
+    m_cube_Shader.compileFragmentShader();
+    m_cube_Shader.createShaderProgram();
+
+    //Setup shader matrixes.
+    m_cube_Shader.use();
+    m_cube_Shader.setMatrix4("proj_matrix", projection);
+    m_cube_Shader.setMatrix4("view_matrix",view);
+
+
+    //Create text shader.
+    const char* textVertexShader = 
+    "#version 430 core\n"
+    "layout(location = 0) in vec4 aPos;\n"
+    "layout(location = 1) in vec2 texCoordIn;\n"
+
+    "uniform mat4 mv_matrix;"
+    "out vec2 texCoordOut;\n"
+    "void main()\n"
+    "{\n"
+    "   gl_Position = mv_matrix * aPos;\n"
+    "   texCoordOut = texCoordIn;"
+    "}\0";
+
+    const char* textFragmentShader =
+    "#version 430 core\n"
+    "layout (binding = 0) uniform sampler2D image;\n"
+    "in vec2 texCoordOut;\n"
+    "out vec4 fragColor;\n"
+
+    "void main()"
+    "{"
+        "fragColor = texture(image, texCoordOut);"
+    "}";
+    m_text_Shader.initShader(textVertexShader,textFragmentShader);
+    m_text_Shader.compileVertexShader();
+    m_text_Shader.compileFragmentShader();
+    m_text_Shader.createShaderProgram();
+}
 void Game::update(float dt) 
 {
+    //Play the opening sound only once and wait for it to be over.
     if(!m_already_Played_Opening_Sound)
     {
         if(m_current_Loop_Number == 2)
@@ -139,7 +215,9 @@ void Game::update(float dt)
         {
             //Add score.
             m_scoremanager.addScore(100);
-
+            //Update score text.
+            const char* scoreText = std::to_string(m_scoremanager.getPlayerScore()).c_str();
+            m_text_Manager.setScoreText(scoreText);
             //Invert the ghosts.
             m_inverted = true;
             m_inverted_Timer = 0;
@@ -153,6 +231,8 @@ void Game::update(float dt)
         {
             m_sound_Stop_Timer = 0.0f;
             m_scoremanager.addScore(10);
+            const char* scoreText = std::to_string(m_scoremanager.getPlayerScore()).c_str();
+            m_text_Manager.setScoreText(scoreText);
         }
 
         //Check if the player won the level.
@@ -201,6 +281,8 @@ void Game::update(float dt)
             {
                 m_soundManager.playSound("pacman_eatghost",-1,true);
                 m_scoremanager.addScore(250);
+                const char* scoreText = std::to_string(m_scoremanager.getPlayerScore()).c_str();
+                m_text_Manager.setScoreText(scoreText);
             }
             else
             {
@@ -229,10 +311,11 @@ void Game::render()
     static const GLfloat bgColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
     glClearBufferfv(GL_COLOR, 0, bgColor);
    
-    m_foodmanager.draw(shader);
-    m_mazeManager.draw(shader);
-    m_pacmanmanager.draw(shader);
-    m_ghostmanager.draw(shader);
+    m_mazeManager.draw(m_cube_Shader);
+    m_pacmanmanager.draw(m_cube_Shader);
+    m_ghostmanager.draw(m_cube_Shader);
+    m_foodmanager.draw(m_cube_Shader);
+    m_text_Manager.draw(m_text_Shader);
 }
 
 void Game::clean() 

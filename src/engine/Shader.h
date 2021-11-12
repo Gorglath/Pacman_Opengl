@@ -16,6 +16,7 @@ public:
  
     GLuint programId;
 
+    void initShader(const char* nVertexShader,const char* nFragmentShader);
     void compileVertexShader();
     void compileFragmentShader();
     void createShaderProgram();
@@ -39,35 +40,10 @@ private:
     GLuint vs;
     GLuint fs;
  
-    const char* vertexShader =
-        "#version 430\n"
-        "layout(location = 0) in vec4 position;"
-
-        "uniform mat4 mv_matrix;"
-        "uniform mat4 proj_matrix;"
-        "uniform mat4 view_matrix;"
-        "uniform vec4 colorIn;"
-
-        "out vec4 cube_color;"
-
-        "void main(void)"
-        "{"
-            "cube_color = colorIn;"
-            "gl_Position = proj_matrix * view_matrix * mv_matrix * position;"
-        "}";
+    const char* vertexShader;
 
 
-    const char* fragmentShader =
-        "#version 430\n"
-
-        "in vec4 cube_color;"
-
-        "out vec4 color;"
-
-        "void main()"
-        "{"
-            "color = cube_color;"
-        "}";
+    const char* fragmentShader;
  
     void checkShaderErrors(GLuint shader, std::string shaderType);
 

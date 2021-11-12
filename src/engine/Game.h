@@ -18,6 +18,7 @@
 #include "../game/ScoreManager.h"
 #include "../game/AStar.h"
 #include "../game/SoundManager.h"
+#include "../game/TextManager.h"
 using std::vector;
 
 // This game class runs a simple game loop
@@ -37,6 +38,7 @@ class Game {
 
    private:
 
+    void setShaders();
     void restartGame();
     GLuint vao;
     GLuint buffer;
@@ -62,8 +64,10 @@ class Game {
     PathFinding m_pathFinding;
     InputManager m_inputManager;
     SoundManager m_soundManager;
+    TextManager m_text_Manager;
 
-    Shader shader;
+    Shader m_cube_Shader;
+    Shader m_text_Shader;
     Grid m_grid;
 };
 

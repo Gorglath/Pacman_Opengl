@@ -9,6 +9,7 @@ class ScoreManager
     ~ScoreManager() = default;
 
     void addScore(int value);
+    inline int getPlayerScore() const {return m_player_score;}
     private:
     int m_player_score{0};
 
