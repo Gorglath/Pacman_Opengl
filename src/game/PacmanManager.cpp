@@ -67,7 +67,7 @@ bool PacmanManager::checkIfCanMoveInDirection(Direction direction,MazeManager& m
     default:
         break;
     }
-    return !mazeManager.getIsCollidingWithWall(move_Direction,pacman_Position,0.9f,1.3f);
+    return !mazeManager.getIsCollidingWithWall(move_Direction,pacman_Position,0.99f,1.3f);
 }
 //Check if pacman reached a wall.
 void PacmanManager::checkIfReachedWall(MazeManager& mazeManager)

@@ -26,7 +26,6 @@ class TextManager
     Text m_scoreValue;
     Text m_livesTitle;
     Text m_livesValue;
-    vector<Text> m_texts;
     TTF_Font* m_font;
 };
 
